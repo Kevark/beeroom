@@ -1,34 +1,32 @@
 var request = require('request');
 var json = require('jsonify');
 var _ = require('lodash');
+var beepi = require('./beepi');
 
-var beepiOpts = require('./beepiOpts');
-var initialUrl = 'http://www.beepi.com/v1/listings/carsSearch';
-var paginatedUrl = 'http://www.beepi.com/v1/listings/carsPageResults';
-var searchQueryId;
-var pages;
-var Results = function() {
-  return {
-    name: '',
-    mileage: 0,
-    price: 0,
-    vin: '',
-    pic: '',
-    url: ''
-  };
-};
 
 request.post(
-  initialUrl,
-	{json: beepiOpts}, 
+  beepi.initialUrl,
+	{json: beepi.opts}, 
   function (error, response, body) {
+    var searchQueryId;
+    var pages;
+    var Results = function() {
+      return {
+        name: '',
+        mileage: 0,
+        price: 0,
+        vin: '',
+        pic: '',
+        url: ''
+      };
+    };
 		if (!error && response.statusCode == 200) {
 			searchQueryId = body.searchQueryId;
 			pages = +body.pageCounts;
 
 			for(var i=1; i<(pages+1); i++) {
 				request.post(
-          paginatedUrl,
+          beepi.paginatedUrl,
 					{json: 
 						{
 							PageId: i,
