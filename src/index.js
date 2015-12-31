@@ -53,6 +53,13 @@ initialStream.subscribe(
 
     promiseStream.subscribe(
       function(response) {
+        //do some filter or mapping here to cut out the crap from beepi only need:
+        // results.name    = car.fullTitle,
+        //      results.mileage = car.mileage,
+        //      results.price   = car.salePrice,
+        //      results.vin     = car.vin,
+        //      results.pic     = 'https:' + car.carShotUrls.heroShotUrl,
+        //      results.url     = 'https://www.beepi.com' + car.carPageUrl   
         all = [...all,
         ...response.carsOnSale
         ];
