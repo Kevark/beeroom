@@ -38,7 +38,7 @@ request.post(
           function (error, response, body) {
 						if (!error && response.statusCode == 200) {
 							body.carsOnSale.forEach(function(car) {
-                results         = Results();
+                results         = new Results();
                 results.name    = car.fullTitle,
                 results.mileage = car.mileage,
                 results.price   = car.salePrice,
