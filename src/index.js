@@ -1,9 +1,9 @@
-var fs = require('fs');
-var request = require('request-promise');
-var Rx = require('rx');
-var json = require('jsonify');
-var _ = require('lodash');
-var beepi = require('./beepi');
+import * as fs from 'fs';
+var request = require('request-promise'); //this lib doesnt work with es2015 syntax
+import * as Rx from 'rx';
+import * as json from 'jsonify';
+import * as _ from 'lodash';
+import { beepi } from './beepi.js';
 
 var searchQueryId;
 var pages;
@@ -30,7 +30,7 @@ var paginatedOpts = function(uri, page, query){
 };
 
 function requestIthPage(url, i, query) {
-  pagOpts = new paginatedOpts(url, i, query);
+  const pagOpts = new paginatedOpts(url, i, query);
   return request(pagOpts);
 }
 
@@ -59,7 +59,8 @@ initialStream.subscribe(
         //      results.price   = car.salePrice,
         //      results.vin     = car.vin,
         //      results.pic     = 'https:' + car.carShotUrls.heroShotUrl,
-        //      results.url     = 'https://www.beepi.com' + car.carPageUrl   
+        //      results.url     = 'https://www.beepi.com' + car.carPageUrl,
+        //      results.src     = 'Beepi'   
         all = [...all,
         ...response.carsOnSale
         ];
@@ -69,7 +70,17 @@ initialStream.subscribe(
       },
       function() {
         //on complete
-        fs.writeFile('../results.json', json.stringify(all), function(err) {
+        var out = all.map(function(car) {
+          return {
+            mileage: car.mileage,
+            price: car.salePrice,
+            vin: car.vin,
+            pic: 'https:' + car.carShotUrls.heroShotUrl,
+            url: 'https://www.beepi.com' + car.carPageUrl,
+            src: 'Beepi'
+          };
+        });
+        fs.writeFile('/home/sam/beeroom/results.json', json.stringify(out), function(err) {
           if(err) {
             return console.log('there was an error writing to disk ', err);
           }
